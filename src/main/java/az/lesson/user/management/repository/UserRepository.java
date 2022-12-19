@@ -1,0 +1,7 @@
+package az.lesson.user.management.repository;
+
+import az.lesson.user.management.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+}
