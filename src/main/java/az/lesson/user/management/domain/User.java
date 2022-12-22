@@ -1,7 +1,12 @@
 package az.lesson.user.management.domain;
 
 import az.lesson.user.management.enums.UserStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,7 +16,20 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -31,11 +49,14 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @AllArgsConstructor
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
+@NamedEntityGraph(
+        name = "user_eg",
+        attributeNodes = @NamedAttributeNode(value = "roles"))
 public class User {
 
     @Id
-    @SequenceGenerator(name = "users_seq_gen", sequenceName = "users_seq_gen")
-    @GeneratedValue(strategy = SEQUENCE, generator = "users_seq_gen")
+    @SequenceGenerator(name = "users_seq", sequenceName = "users_seq")
+    @GeneratedValue(strategy = SEQUENCE, generator = "users_seq")
     @Column(updatable = false, nullable = false, insertable = false)
     private Long id;
 

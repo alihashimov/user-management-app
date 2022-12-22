@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <!-- User Id sequence  -->
+    <changeSet id="1651228419054-1" author="Ali Hashimov">
+        <createSequence incrementBy="1"
+                        sequenceName="users_seq"
+                        startValue="1"/>
+    </changeSet>
+
+    <!-- Role Id sequence  -->
+    <changeSet id="1651228419054-2" author="Ali Hashimov">
+        <createSequence incrementBy="1"
+                        sequenceName="roles_seq"
+                        startValue="1"/>
+    </changeSet>
+
+    <!-- Privilege Id sequence  -->
+    <changeSet id="1651228419054-3" author="Ali Hashimov">
+        <createSequence incrementBy="1"
+                        sequenceName="privileges_seq"
+                        startValue="1"/>
+    </changeSet>
+
+    <changeSet id="1651228419054-4" author="Ali Hashimov">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+            </column>
+            <column name="full_name" type="VARCHAR(70)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(32)" defaultValue="ENABLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1651228419054-5" author="Ali Hashimov">
+        <addUniqueConstraint columnNames="username" constraintName="uc_users_username" tableName="users"/>
+    </changeSet>
+
+    <!-- Role Table -->
+    <changeSet id="1651228419054-6" author="Ali Hashimov">
+        <createTable tableName="roles">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
+            </column>
+            <column name="type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1651228419054-7" author="Ali Hashimov">
+        <addUniqueConstraint columnNames="type" constraintName="uc_roles_type" tableName="roles"/>
+    </changeSet>
+
+    <!-- UserRole -->
+    <changeSet id="1651228419054-8" author="Ali Hashimov">
+        <createTable tableName="users_roles">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_roles"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users_roles"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Privilege -->
+    <changeSet id="1651228419054-9" author="Ali Hashimov">
+        <createTable tableName="privileges">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
+            </column>
+            <column name="type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1651228419054-10" author="Ali Hashimov">
+        <addUniqueConstraint columnNames="type" constraintName="uc_privileges_type" tableName="privileges"/>
+    </changeSet>
+
+    <!-- RolesPrivilege -->
+    <changeSet id="1651228419054-11" author="Ali Hashimov">
+        <createTable tableName="roles_privileges">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles_privileges"/>
+            </column>
+            <column name="privilege_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles_privileges"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

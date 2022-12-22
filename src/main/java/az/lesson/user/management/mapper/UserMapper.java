@@ -19,6 +19,7 @@ public interface UserMapper {
     @Mapping(target = "roles", qualifiedByName = "mapRoleToUser")
     User toEntity(AdminUserRegister adminUserRegister);
 
+    @Mapping(target = "roles", qualifiedByName = "mapDefaultRoleToUser")
     User toEntity(PublicUserRegister publicUserRegister);
 
     UserDto toUserDto(User user);
@@ -26,7 +27,7 @@ public interface UserMapper {
     List<UserDto> toUserDto(List<User> users);
 
     default RestPageResponse<UserDto> toUserPage(Page<User> userPage) {
-        List<UserDto> users = toUserDto(userPage.getContent());
+        var users = toUserDto(userPage.getContent());
         return new RestPageResponse<>(
                 users,
                 userPage.getTotalElements(),

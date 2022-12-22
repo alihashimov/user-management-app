@@ -11,11 +11,12 @@ import az.lesson.user.management.mapper.UserMapper;
 import az.lesson.user.management.repository.UserRepository;
 import az.lesson.user.management.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import static az.lesson.user.management.enums.UserStatus.*;
+import static az.lesson.user.management.enums.UserStatus.BLOCKED;
+import static az.lesson.user.management.enums.UserStatus.DISABLE;
+import static az.lesson.user.management.enums.UserStatus.ENABLE;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +28,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public UserDto register(AdminUserRegister adminUserRegister) {
         checkUsername(adminUserRegister.getUsername());
-        //TODO find & set role
-        User user = repository.saveAndFlush(mapper.toEntity(adminUserRegister));
+        var user = repository.saveAndFlush(mapper.toEntity(adminUserRegister));
         return mapper.toUserDto(user);
     }
 
@@ -56,14 +56,18 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public RestPageResponse<UserDto> getAllUsers(Integer pageIndex, Integer pageSize) {
-        Page<User> userPage = repository.findAll(PageRequest.of(pageIndex, pageSize));
+        var userPage = repository.findAll(PageRequest.of(pageIndex, pageSize));
         return mapper.toUserPage(userPage);
     }
 
-
+    private void checkUsername(String username) {
+        if (repository.existsByUsername(username)) {
+            throw new ResourceConflictException("User", "username", username);
+        }
+    }
 
     public UserDto changeUserStatus(Long id, UserStatus status) {
-        User user = findById(id);
+        var user = findById(id);
         user.setStatus(status);
         return mapper.toUserDto(repository.saveAndFlush(user));
     }
@@ -71,10 +75,5 @@ public class AdminUserServiceImpl implements AdminUserService {
     public User findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-    }
-    private void checkUsername(String username) {
-        if (repository.existsByUsername(username)) {
-            throw new ResourceConflictException("User", "username", username);
-        }
     }
 }
